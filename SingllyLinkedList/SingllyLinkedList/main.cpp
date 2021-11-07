@@ -96,6 +96,12 @@ public:
             length++;
         }
     }
+    // make list circular
+    void convertToCircular() {
+        tail->setNext(this->head);
+    }
+    
+    
     //remove element from the start
     void removeFromBeginning(){
         if(!isEmpty()){
