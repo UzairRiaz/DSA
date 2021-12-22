@@ -48,6 +48,19 @@ public:
         }
         return NULL;
     }
+    // remove specific node
+    void removeNode(int n) {
+        if(!isEmpty()){
+            int ind = this->search(n);
+            Node * Prev = this->getNode(ind - 1);
+            Node * NodeToRemove = this->getNode(ind);
+            Node * next = this->getNode(ind + 1);
+            
+            Prev->setNext(next);
+            delete NodeToRemove;
+            length--;
+        }
+    }
     //insert element at the end
     void insertAtEnd(int val){
         Node *node = new Node(val);
@@ -204,6 +217,20 @@ public:
             currentNode = getNode(i);
         }
             
+    }
+    
+    // Remove duplicate
+    
+    void removeDuplicate(){
+        for(int i = 1; i <= length; i++){
+            Node *tempNode = getNode(i);
+            int data = tempNode->getData();
+            for(int j = i+1; j <= length; j++){
+                if(data == getNode(j)->getData()){
+                    removeNode(j);
+                }
+            }
+        }
     }
 };
 
