@@ -18,4 +18,10 @@ public abstract class LinkedList {
             return true;
         return false;
     }
+
+    public int getLength() {
+        return this.length;
+    }
+
+    public abstract void removeNode(int d);
 }
