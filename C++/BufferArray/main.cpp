@@ -70,6 +70,58 @@ public:
         return true;
     }
 
+    int pop() {
+        // remove the last value from the buffer
+        if (size == 0) {
+            return -1;
+        }
+        if (tail == 0) {
+            tail = capacity - 1;
+            size--;
+            return buffer[tail];
+        }
+        tail--;
+        size--;
+        return buffer[tail];
+    }
+
+    int peek() {
+        // return the last value from the buffer
+        if (size == 0) {
+            return -1;
+        }
+        if (tail == 0) {
+            return buffer[capacity - 1];
+        }
+        return buffer[tail - 1];
+    }
+
+    int shift() {
+        // remove the first value from the buffer
+        if (size == 0) {
+            return -1;
+        }
+        if (head == capacity - 1) {
+            head = 0;
+            size--;
+            return buffer[capacity - 1];
+        }
+        head++;
+        size--;
+        return buffer[head - 1];
+    }
+
+    bool unshift(int value) {
+        
+    }
+    
+    int& operator[](int index) {
+        if (head + index >= capacity) {
+            return buffer[head + index - capacity];
+        } 
+        return buffer[head + index];
+    };
+
     int length() {
         return size;
     }
@@ -99,35 +151,34 @@ public:
 
 int main(){
     BufferArray buffer;
- buffer.push(1);
+    buffer.push(1);
     buffer.print();
- buffer.push(2);
-    buffer.print();
-
- buffer.push(3);
+    buffer.push(2);
     buffer.print();
 
- buffer.push(4);
+    buffer.push(3);
     buffer.print();
 
- buffer.push(5);
+    buffer.push(4);
     buffer.print();
 
- buffer.push(6);
+    buffer.push(5);
     buffer.print();
 
- buffer.push(7);
+    buffer.push(6);
+    buffer.print();
+
+    buffer.push(7);
     buffer.print();
     
- buffer.push(8);
+    buffer.push(8);
     buffer.print();
 
- buffer.push(9);
+    buffer.push(9);
     buffer.print();
 
     buffer.push(10);
     buffer.print();
-    buffer.printBuffer();
 
     buffer.push(11);
     buffer.print();
@@ -135,7 +186,8 @@ int main(){
     buffer.push(12);
     buffer.print();
 
-    buffer.printBuffer();
+    cout << buffer[9] << endl;
+
     return 0;
 }
 
