@@ -1,12 +1,13 @@
 #include<iostream>
 
 using namespace std;
+template <typename T>
 
 class BufferArray {
 private:
     int size;
     int capacity;
-    int* buffer;
+    T* buffer;
     int head;
     int tail;
 
@@ -14,7 +15,7 @@ public:
     BufferArray() {
         this->size = 0;
         this->capacity = size + 10;
-        this->buffer = new int[this->capacity];
+        this->buffer = new T[this->capacity];
         this->head = 3;
         this->tail = this->head + 1;
     }
@@ -27,12 +28,14 @@ public:
         return head == tail;
     }
 
-    bool push(int value) {
-        // add value to the end of the buffer
-        if (size == capacity) {
+    bool isFull() {
+        return head == tail - 1;
+    }
+
+    void IncreaseCapacity() {
             // resize the buffer
             int newCapacity = capacity + 10;
-            int* newBuffer = new int[newCapacity];
+            T* newBuffer = new T[newCapacity];
 
             int current = head;
             int newCurrent = 3;
@@ -50,10 +53,15 @@ public:
             capacity = newCapacity;
             head = 3;
             tail = head + size;
+    }
+
+    bool push(T value) {
+        if(this->isFull()) {
+                this->IncreaseCapacity();
         }
-        if (size == 0) {
-            cout << "size is 0" << endl;
+        if (size == 0){
             buffer[head] = value;
+            tail++;
             size++;
             return true;
         }
@@ -70,7 +78,7 @@ public:
         return true;
     }
 
-    int pop() {
+    T pop() {
         // remove the last value from the buffer
         if (size == 0) {
             return -1;
@@ -85,7 +93,7 @@ public:
         return buffer[tail];
     }
 
-    int peek() {
+    T peek() {
         // return the last value from the buffer
         if (size == 0) {
             return -1;
@@ -96,7 +104,7 @@ public:
         return buffer[tail - 1];
     }
 
-    int shift() {
+    T shift() {
         // remove the first value from the buffer
         if (size == 0) {
             return -1;
@@ -111,11 +119,28 @@ public:
         return buffer[head - 1];
     }
 
-    bool unshift(int value) {
-        
+    bool unshift(T value) {
+        if (this->isFull()) {
+            this->IncreaseCapacity();
+        }
+        if (size == 0){
+            buffer[head] = value;
+            size++;
+            return true;
+        }
+        if (head == 0) {
+            head = capacity - 1;
+            buffer[head] = value;
+            size++;
+            return true;
+        }
+        buffer[head - 1] = value;
+        head--;
+        size++;
+        return true;
     }
-    
-    int& operator[](int index) {
+
+    T& operator[](int index) {
         if (head + index >= capacity) {
             return buffer[head + index - capacity];
         } 
@@ -147,22 +172,36 @@ public:
             cout << buffer[i] << " ";
         }
     }
+
+    void map(void (*func)(T)) {
+        for(this-> head; head < tail; head++) {
+            func(buffer[head]);
+        }
+    }
+
+    T* forEach(T* (*func)(T)) {
+        T* result = new T[size];
+        for(this-> head; head < tail; head++) {
+            result[head] = func(buffer[head]);
+        }
+        return result;
+    }
 };
 
 int main(){
-    BufferArray buffer;
-    buffer.push(1);
+    BufferArray<int> buffer;
+    buffer.push('a');
     buffer.print();
-    buffer.push(2);
-    buffer.print();
-
-    buffer.push(3);
+    buffer.push('b');
     buffer.print();
 
-    buffer.push(4);
+    buffer.push('c');
     buffer.print();
 
-    buffer.push(5);
+    buffer.push('4');
+    buffer.print();
+
+    buffer.push('5');
     buffer.print();
 
     buffer.push(6);
@@ -186,8 +225,21 @@ int main(){
     buffer.push(12);
     buffer.print();
 
-    cout << buffer[9] << endl;
+    cout << buffer[1] << endl;
 
+    buffer.shift();
+    buffer.print();
+
+    // buffer.map([](int c) {
+    //     cout << c << endl;
+    // });
+
+    // int *result = buffer.forEach((int c) {
+    //     return c * 2;
+    // });
+    // for (int i = 0; i < result.length(); i++) {
+    //     cout << result[i] << endl;
+    // }
     return 0;
 }
 
